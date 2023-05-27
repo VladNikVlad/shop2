@@ -1,0 +1,45 @@
+/* Стили для шапки */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f2f2f2;
+}
+
+.left-buttons button,
+.right-buttons button {
+    margin-right: 10px;
+}
+
+/* Стили для скрытого меню */
+#hidden-menu {
+    display: none;
+}
+
+#hidden-menu.show {
+    display: block;
+}
+
+#hidden-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#hidden-menu li {
+    margin-bottom: 5px;
+}
+
+/* Стили для основного содержимого */
+#main-content {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Стили для модального окна входа */
+.modal {
+    display: none;
+    /* Добавьте стили для модального окна */
+}
