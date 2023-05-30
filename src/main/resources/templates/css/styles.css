@@ -43,3 +43,10 @@ header {
     display: none;
     /* Добавьте стили для модального окна */
 }
+
+body {
+  background-image: url("шлях_до_фонового_зображення");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
