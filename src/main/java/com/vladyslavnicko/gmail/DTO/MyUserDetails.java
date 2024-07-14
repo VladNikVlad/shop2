@@ -18,6 +18,10 @@ public class MyUserDetails implements UserDetails{
     public MyUserDetails(User user) {
         this.user = user;
     }
+    
+    public User getUser() {
+    	return user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -38,7 +42,7 @@ public class MyUserDetails implements UserDetails{
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return user.getLogin();
+		return user.getEmail();
 	}
 
 	@Override
@@ -62,7 +66,7 @@ public class MyUserDetails implements UserDetails{
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		return user.isEnabled();
+		return true;
 	}
 
 }

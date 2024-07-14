@@ -1,14 +1,20 @@
 package com.vladyslavnicko.gmail.service.impl;
 
-import com.vladyslavnicko.gmail.DTO.UserInfo;
+import com.vladyslavnicko.gmail.DTO.AddressDTO;
+import com.vladyslavnicko.gmail.DTO.UserDTO;
 import com.vladyslavnicko.gmail.DTO.UserPassword;
+import com.vladyslavnicko.gmail.config.PasswordHashingImpl;
 import com.vladyslavnicko.gmail.exception.ConflictException;
 import com.vladyslavnicko.gmail.model.Address;
 import com.vladyslavnicko.gmail.model.User;
 import com.vladyslavnicko.gmail.repository.UserRepository;
-import com.vladyslavnicko.gmail.security.PasswordHashing;
+//import com.vladyslavnicko.gmail.security.PasswordHashing;
 import com.vladyslavnicko.gmail.service.UserService;
+
+import io.micrometer.common.util.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,17 +26,17 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
-    private final PasswordHashing passwordHashing;
+//    private final PasswordHashing passwordHashing;
+    private PasswordHashingImpl passwordEncoder;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordHashing passwordHashing) {
+    public UserServiceImpl(UserRepository userRepository, PasswordHashingImpl passwordEncoder) {
         this.userRepository = userRepository;
-        this.passwordHashing = passwordHashing;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findUserByEmail(email);
     }
     
     public User findByName(String login) {
@@ -41,37 +47,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(User user) {
     	if (user.getPassword() != null) {
-    		String password = user.getPassword();
-    		byte[] salt = passwordHashing.generateSalt();
-    		user.setSalt(salt);
-    		user.setPasswordHash(passwordHashing.hashPassword(password, salt));
+    		user.setPassword(passwordEncoder.encode(user.getPassword()));
     	}
         return userRepository.save(user);
     }
 
     @Transactional
     @Override
-    public UserInfo updateUser(long id, UserInfo user) {
+    public UserDTO updateUser(long id, UserDTO user) {
         User findUser = userRepository.findById(id);
         if (findUser == null) {
             throw new ConflictException("Invalid id");
         }
-        Address address = null;
-        if (user.getCity() != null){
-            System.out.println("Hello");
-            address = new Address();
-            address.setId(findUser.getAddress().getId());
-            address.setCity(user.getCity());
-            if (user.getStreet() != null) {
-                address.setStreet(user.getStreet());
-            }
-            if (user.getState() != null) {
-                address.setState(user.getState());
-            }
-            if (user.getZip() != null) {
-                address.setZip(user.getZip());
-            }
-            findUser.setAddress(address);
+      
+        if (user.getAddress() != null){
+            findUser.setAddress(AddressDTO.toAddress(user.getAddress()));
         }
 
         if (user.getFirstName() == null ||  user.getFirstName().isBlank()) {
@@ -86,13 +76,13 @@ public class UserServiceImpl implements UserService {
             LocalDate localDate = LocalDate.parse(user.getDateOfBirth(), formatter);
             findUser.setDateOfBirth(localDate);
         }
-        UserInfo info = new UserInfo();
-        return info.getUserInfoFromUser(userRepository.save(findUser));
+        
+        return UserDTO.fromUser(userRepository.save(findUser));
     }
 
     @Transactional
     @Override
-    public UserInfo updateUserPassword(long id, UserPassword user){
+    public UserDTO updateUserPassword(long id, UserPassword user){
         User findUser = userRepository.findById(id);
         if (findUser == null || !findUser.getPassword().equals(user.getOldPassword())) {
             throw new ConflictException("Invalid email or password");
@@ -107,7 +97,7 @@ public class UserServiceImpl implements UserService {
             throw new ConflictException("The entered password is identical to the old one");
         }
       //  findUser.setPassword(user.getNewPassword());
-        return new UserInfo().getUserInfoFromUser(userRepository.save(findUser));
+        return UserDTO.fromUser(userRepository.save(findUser));
     }
 
     @Override
@@ -127,10 +117,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean chackPasssword(String password, User user) {
-        // для проверки пароля, запрашиваем соль и захэшированный пароль из базы данных
-        byte[] storedSalt = user.getSalt();
-        byte[] storedHashedPassword = user.getPasswordHash();
-        // проверяем, соответствует ли введенный пользователем пароль сохраненному захэшированному паролю
-        return passwordHashing.verifyPassword(password, storedSalt, storedHashedPassword);
+    	if (user != null && StringUtils.isNotBlank(user.getPassword())) {
+    	return passwordEncoder.matches(password, user.getPassword());
+    	} else {
+    		return false;
+    	}
     }
 }

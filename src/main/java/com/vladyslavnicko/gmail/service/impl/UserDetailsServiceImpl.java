@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import com.vladyslavnicko.gmail.DTO.MyUserDetails;
+import com.vladyslavnicko.gmail.model.Role;
 import com.vladyslavnicko.gmail.model.User;
 import com.vladyslavnicko.gmail.repository.UserRepository;
 
@@ -22,7 +23,11 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		User user = userRepository.findByLogin(username);
         if (user == null) {
             throw new UsernameNotFoundException("Could not find user");
-        }  
+        }
+        if (user.getRole() == null) {
+			user.setRole(Role.VISITAN);
+		}
+        
         return new MyUserDetails(user);
 	}
 

@@ -1,13 +1,19 @@
 package com.vladyslavnicko.gmail.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "users")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +32,7 @@ public class User {
     private String email;
 
     @Column(name = "password")
-    private byte[] passwordHash;
-    @Transient
     private String password;
-
-    @Column(name = "salt")
-    private byte[] salt;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
@@ -46,6 +47,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "language")
+    private Language lang;
     
     @Column(name = "enabled")
     private boolean enabled;

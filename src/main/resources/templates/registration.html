@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>login out</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <style type="text/css">
+    	label {
+    		display: inline-block;
+    		width: 200px;
+    		margin : 5px;
+    		text-align: left;
+    	}
+    	input[type=text], input[type=password], input[type=email],  select {
+    		display: inline-block;
+    		width: 200px;
+    		margin : 5px;
+    	} 
+    </style>
+    
+</head>
+<body>
+
+
+<div align="center">
+    <h1>login out</h1>
+    <form action="#" th:action="@{/registration}" th:object="${user}" method="post">
+    	<label>firstName</label>
+        <input type="text" th:field="*{firstName}" placeholder="enter firstname" required="required" th:errorclass="is-invalid"/><br>
+        <label>password</label>
+        <input type="text" th:field="*{lastName}" placeholder="enter lastname"/><br>
+        <label>Login</label>
+        <input type="text" th:field="*{login}" placeholder="Enter login"/><br>
+        <label>password</label>
+        <input type="password" th:field="*{password}" placeholder="enter password" required="required" th:errorclass="is-invalid"/><br>
+        <!-- <label>Repeat password</label>
+        <input type="password" th:field="*{repeatPassword}" placeholder="enter Repeat password" required="required"
+      	th:errorclass="is-invalid" th:attr="data-fieldname='Repeat password'"/><br> -->
+        <label>email</label>
+        <input type="email" th:field="*{email}" placeholder="Enter email" required="required" th:errorclass="is-invalid"/><br>
+        <label>Status</label>
+        <!-- <select th:field="*{simple}">
+        	<option th:each="p : ${proffes}" th:value="${p}" th:text="${p}"/>
+        </select> --> <br>	
+        <button type="submit" class="btn btn-success">login out</button>
+    </form>
+</div>
+
+<!-- <div th:if="${#fields.hasErrors('repeatPassword')}" class="alert alert-danger">
+    <p th:each="error : ${#fields.errors('repeatPassword')}" th:text="${error}"></p>
+</div> -->
+
+
+</body>
+</html>
