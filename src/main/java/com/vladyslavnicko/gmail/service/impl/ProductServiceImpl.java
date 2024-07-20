@@ -5,28 +5,54 @@ import com.vladyslavnicko.gmail.model.Category;
 import com.vladyslavnicko.gmail.model.Product;
 import com.vladyslavnicko.gmail.repository.ProductRepository;
 import com.vladyslavnicko.gmail.service.ProductService;
+import com.vladyslavnicko.gmail.service.UserService;
+
 import jakarta.transaction.Transactional;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final UserService userService;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, UserService userService) {
         this.productRepository = productRepository;
+        this.userService = userService;
     }
 
-    @Transactional
     @Override
     public Product saveProduct(Product product) {
-       Product product1 = productRepository.save(product);
-        return product1;
+    	if (product == null) {
+    		throw new ConflictException("Product is null");
+    	}
+    	
+    	if (StringUtils.isBlank(product.getName()) || StringUtils.isBlank(product.getDescription()) 
+    			|| product.getPrice().compareTo(BigDecimal.ZERO) == 0) {
+    		throw new ConflictException("Name or description is empty or prise equals zero");
+    	}
+    	
+    	Product oldProduct = productRepository.findProductByName(product.getName());
+    	if (oldProduct != null) {
+    		if (StringUtils.equals(oldProduct.getDescription(), product.getDescription())) {
+    			throw new ConflictException("Such a product already exists");
+    		}
+    	}
+    	
+    	product.setCreatorUser(userService.getCurrentUser());
+    	product.setCreateDate(new Date());
+    	
+    	product = productRepository.save(product);
+    	
+       return product;
     }
 
-    @Transactional
     @Override
     public void deleteProductId(long id) {
     }
@@ -41,7 +67,6 @@ public class ProductServiceImpl implements ProductService {
         return findByNameProduct(name);
     }
 
-    @Transactional
     @Override
     public Product updateProduct(Product product) {
         Product oldProduct = findProductById(product.getId());
@@ -71,4 +96,17 @@ public class ProductServiceImpl implements ProductService {
         //return productRepository.countProducts();
         return  1;
     }
+
+	@Override
+	public Product findProductBy(long productId) {
+		if (productId == 0) {
+			throw new ConflictException("productId is 0");
+		}
+		
+		Product product = productRepository.findProductById(productId);
+		if (product == null) {
+			throw new ConflictException("product not found");
+		}
+		return product;
+	}
 }

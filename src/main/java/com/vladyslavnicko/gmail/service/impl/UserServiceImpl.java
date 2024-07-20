@@ -1,20 +1,19 @@
 package com.vladyslavnicko.gmail.service.impl;
 
 import com.vladyslavnicko.gmail.DTO.AddressDTO;
+import com.vladyslavnicko.gmail.DTO.MyUserDetails;
 import com.vladyslavnicko.gmail.DTO.UserDTO;
 import com.vladyslavnicko.gmail.DTO.UserPassword;
 import com.vladyslavnicko.gmail.config.PasswordHashingImpl;
 import com.vladyslavnicko.gmail.exception.ConflictException;
-import com.vladyslavnicko.gmail.model.Address;
 import com.vladyslavnicko.gmail.model.User;
 import com.vladyslavnicko.gmail.repository.UserRepository;
-//import com.vladyslavnicko.gmail.security.PasswordHashing;
 import com.vladyslavnicko.gmail.service.UserService;
 
 import io.micrometer.common.util.StringUtils;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +38,28 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserByEmail(email);
     }
     
-    public User findByName(String login) {
-    	return userRepository.findByLogin(login);	
+//    public User findByName(String login) {
+//    	return userRepository.findByLogin(login);	
+//    }
+    
+    @Override
+    public String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+        	MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+            return userDetails.getUsername();
+        }
+        return null;
+    }
+    
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
+        	MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+            return userDetails.getUser();
+        }
+        return null;
     }
 
     @Transactional

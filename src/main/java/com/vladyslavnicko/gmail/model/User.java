@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -54,5 +55,8 @@ public class User {
     
     @Column(name = "enabled")
     private boolean enabled;
+    
+    @OneToMany(mappedBy = "creatorUser", cascade = CascadeType.ALL)
+    private List<Product> products;
 }
 

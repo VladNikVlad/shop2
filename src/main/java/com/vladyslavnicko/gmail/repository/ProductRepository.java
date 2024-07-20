@@ -14,6 +14,8 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findAll(Pageable pageable);
     Product save(Product product);
+    Product findProductByName(String name);
+    Product findProductById(long id);
     List<Product> findByCategory(Category category);
     @Query("SELECT p FROM Product p WHERE p.price >= :minPrice AND p.price <= :maxPrice")
     List<Product> findByPrice(@Param("minPrice") double minPrice, @Param("maxPrice") double maxPrice);

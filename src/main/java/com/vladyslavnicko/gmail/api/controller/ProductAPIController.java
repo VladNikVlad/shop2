@@ -1,7 +1,10 @@
 package com.vladyslavnicko.gmail.api.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +22,14 @@ public class ProductAPIController {
 	
 	
 	@PostMapping
-	public ResponseEntity<ProductAPI> creatNewProduct(ProductAPI product){
+	public ResponseEntity<ProductAPI> creatNewProduct(@RequestBody ProductAPI product){
 		return ResponseEntity.ok(apiService.saveProduct(product));
+	}
+	
+	@GetMapping
+	@RequestMapping("/{productId}")
+	public ResponseEntity<ProductAPI> findProductById(@PathVariable long productId){
+		return ResponseEntity.ok(apiService.findProductBy(productId));
 	}
 	
 }

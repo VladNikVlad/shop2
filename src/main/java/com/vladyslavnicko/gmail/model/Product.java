@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -36,4 +37,17 @@ public class Product {
 
     @Column(name = "price")
     private BigDecimal price;
+    
+    @ManyToOne
+    @JoinColumn(name = "creator_user_id", referencedColumnName = "id")
+    private User creatorUser;
+    
+    @Column(name = "create_date")
+    private Date createDate;
+    
+    @Column(name = "edit_date")
+    private Date editDate;
+    
+    @Column(name = "delete_date")
+    private Date deeleteDate;
 }

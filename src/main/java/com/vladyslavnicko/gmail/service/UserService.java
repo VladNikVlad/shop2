@@ -15,4 +15,6 @@ public interface UserService {
     UserDTO updateUserPassword(long id, UserPassword user);
     boolean chackPasssword(String password, User user);
     User findByLogin(String login);
+    String getCurrentUsername();
+    User getCurrentUser();
 }

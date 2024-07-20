@@ -11,6 +11,7 @@ import com.vladyslavnicko.gmail.dictionary.TranslateService;
 import com.vladyslavnicko.gmail.exception.ConflictException;
 import com.vladyslavnicko.gmail.model.User;
 import com.vladyslavnicko.gmail.repository.UserRepository;
+import com.vladyslavnicko.gmail.service.ProductService;
 import com.vladyslavnicko.gmail.service.UserService;
 
 import io.micrometer.common.util.StringUtils;
@@ -23,6 +24,7 @@ public class APIServiceImpl implements APIService{
 	private final UserService userService;
 	private final TranslateService translate;
 	private final UserRepository userRepository;
+	private final ProductService productService;
 	
 	@Override
 	public User saveNewUser(User user) {
@@ -45,8 +47,20 @@ public class APIServiceImpl implements APIService{
 
 	@Override
 	public ProductAPI saveProduct(ProductAPI product) {
-		// TODO Auto-generated method stub
-		return new ProductAPI();
+		if (product == null) {
+			throw new ConflictException("Product is null");
+		}
+		
+		return ProductAPI.fromProduct(productService.saveProduct(ProductAPI.toProduct(product)));
+	}
+
+	@Override
+	public ProductAPI findProductBy(long productId) {
+		if (productId == 0) {
+			throw new ConflictException("ProductId is 0");
+		}
+		
+		return ProductAPI.fromProduct(productService.findProductBy(productId));
 	}
 
 }

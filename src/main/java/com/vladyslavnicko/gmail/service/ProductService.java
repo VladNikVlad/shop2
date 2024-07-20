@@ -16,4 +16,5 @@ public interface ProductService {
     //List<Product> findByRating(double minRating);
     List<Product> findByAvailability(boolean available);  //возвращает список продуктов которые находятся в наличии (или нет, в зависимости от значения параметра).
     int countProducts();
+	Product findProductBy(long productId);
 }
