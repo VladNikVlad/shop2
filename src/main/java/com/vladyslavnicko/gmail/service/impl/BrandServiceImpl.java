@@ -33,7 +33,7 @@ public class BrandServiceImpl implements BrandService{
 		brand.setCreatorUser(userService.getCurrentUser());
 		brand.setCreateDate(new Date());
 		
-		return brandRepository.saveBrand(brand);
+		return brandRepository.save(brand);
 	}
 
 }

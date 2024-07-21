@@ -6,6 +6,6 @@ import com.vladyslavnicko.gmail.model.Brand;
 
 public interface BrandRepository extends JpaRepository<Brand, Long> {
 
-	Brand saveBrand(Brand brand);
+	Brand save(Brand brand);
 
 }
