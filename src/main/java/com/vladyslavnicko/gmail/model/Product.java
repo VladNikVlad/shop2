@@ -28,6 +28,10 @@ public class Product {
     
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
+    
+    @ManyToOne
+    @JoinColumn(name = "brand_id", referencedColumnName = "id", nullable = false)
+    private Brand brand;
 
     @Column(name = "name")
     private String name;
@@ -39,10 +43,10 @@ public class Product {
     private BigDecimal price;
     
     @ManyToOne
-    @JoinColumn(name = "creator_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "creator_user_id", referencedColumnName = "id", nullable = false)
     private User creatorUser;
     
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false)
     private Date createDate;
     
     @Column(name = "edit_date")

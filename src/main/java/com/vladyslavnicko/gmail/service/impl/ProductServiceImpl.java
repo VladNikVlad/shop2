@@ -10,6 +10,8 @@ import com.vladyslavnicko.gmail.service.UserService;
 import jakarta.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -108,5 +110,10 @@ public class ProductServiceImpl implements ProductService {
 			throw new ConflictException("product not found");
 		}
 		return product;
+	}
+
+	@Override
+	public Page<Product> findProducts(String name, String category, String brand, Pageable pageable) {
+		return productRepository.findProducts(name, category, brand, pageable);
 	}
 }

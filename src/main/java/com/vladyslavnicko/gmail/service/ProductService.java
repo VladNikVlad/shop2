@@ -5,6 +5,9 @@ import com.vladyslavnicko.gmail.model.Product;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface ProductService {
     Product saveProduct(Product product);
     void deleteProductId(long id);
@@ -17,4 +20,5 @@ public interface ProductService {
     List<Product> findByAvailability(boolean available);  //возвращает список продуктов которые находятся в наличии (или нет, в зависимости от значения параметра).
     int countProducts();
 	Product findProductBy(long productId);
+	Page<Product> findProducts(String name, String category, String brand, Pageable pageable);
 }

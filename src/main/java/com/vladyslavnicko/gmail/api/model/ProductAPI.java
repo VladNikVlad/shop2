@@ -51,4 +51,15 @@ public class ProductAPI {
     	
     	return object;
     }
+    
+    public static List<ProductAPI> fromProducts(List<Product> p) {
+    	List<ProductAPI> list = new ArrayList<ProductAPI>();
+    	
+    	for (Product product: p){
+    		list.add(fromProduct(product));
+    	}
+    	
+    	return list;
+    }
+ 
 }

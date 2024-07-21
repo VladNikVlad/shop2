@@ -1,5 +1,8 @@
 package com.vladyslavnicko.gmail.api.service;
 
+import java.util.List;
+
+import com.vladyslavnicko.gmail.api.model.BrandAPI;
 import com.vladyslavnicko.gmail.api.model.ProductAPI;
 import com.vladyslavnicko.gmail.model.User;
 
@@ -10,4 +13,8 @@ public interface APIService {
 	ProductAPI saveProduct(ProductAPI product);
 
 	ProductAPI findProductBy(long productId);
+
+	List<ProductAPI> findProducts(String name, String category, String brand, int start, int limit);
+
+	BrandAPI saveBrand(BrandAPI brandApi);
 }
