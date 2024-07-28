@@ -26,7 +26,7 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@Column(name = "name")
+	@Column(name = "name", unique = true)
 	String name;
 	
 	@OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)

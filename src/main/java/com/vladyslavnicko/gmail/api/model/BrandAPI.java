@@ -9,16 +9,12 @@ public class BrandAPI {
 	
 	private long id;
 	private String name;
-	private UserAPI user;
 	
 	
 	public static BrandAPI fromBrand(Brand b) {
 		BrandAPI object = new BrandAPI();
 		object.setId(b.getId());
 		object.setName(b.getName());
-		if (b.getCreatorUser() != null) {
-			object.setUser(UserAPI.fromUser(b.getCreatorUser()));
-		}
 		
 		return object;
 	}

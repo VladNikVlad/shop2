@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 @Data
 public class Product {
     @Id
@@ -27,7 +27,7 @@ public class Product {
     private List<Comment> comments = new ArrayList<>();
     
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
+    private List<Image> images;
     
     @ManyToOne
     @JoinColumn(name = "brand_id", referencedColumnName = "id", nullable = false)

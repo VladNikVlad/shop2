@@ -56,7 +56,5 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
     
-    @OneToMany(mappedBy = "creatorUser", cascade = CascadeType.ALL)
-    private List<Product> products;
 }
 

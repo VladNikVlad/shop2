@@ -1,13 +1,14 @@
 package com.vladyslavnicko.gmail.service.impl;
 
 import com.vladyslavnicko.gmail.exception.ConflictException;
+import com.vladyslavnicko.gmail.model.Brand;
 import com.vladyslavnicko.gmail.model.Category;
 import com.vladyslavnicko.gmail.model.Product;
 import com.vladyslavnicko.gmail.repository.ProductRepository;
+import com.vladyslavnicko.gmail.service.BrandService;
+import com.vladyslavnicko.gmail.service.CategoryService;
 import com.vladyslavnicko.gmail.service.ProductService;
 import com.vladyslavnicko.gmail.service.UserService;
-
-import jakarta.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -23,10 +24,15 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final UserService userService;
+    private final BrandService brandSecrvice;
+    private final CategoryService categorySecrvice;
 
-    public ProductServiceImpl(ProductRepository productRepository, UserService userService) {
+    public ProductServiceImpl(ProductRepository productRepository, UserService userService, BrandService brandSecrvice, 
+    		CategoryService categorySecrvice) {
         this.productRepository = productRepository;
         this.userService = userService;
+        this.brandSecrvice = brandSecrvice;
+        this.categorySecrvice = categorySecrvice;
     }
 
     @Override
@@ -47,10 +53,23 @@ public class ProductServiceImpl implements ProductService {
     		}
     	}
     	
+    	Brand brand = brandSecrvice.findBrandByName(product.getBrand().getName());
+    	if (brand == null) {
+    		throw new ConflictException("Brand not found!");
+    	}
+    	
+    	Category category = categorySecrvice.findCategoryByName(product.getCategory().getName());
+    	if (category == null) {
+    		throw new ConflictException("Category not found!");
+    	}
+    	
+    	product.setCategory(category);
+    	product.setBrand(brand);
     	product.setCreatorUser(userService.getCurrentUser());
     	product.setCreateDate(new Date());
     	
     	product = productRepository.save(product);
+    	//product.setId(productId);
     	
        return product;
     }
@@ -115,5 +134,19 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Page<Product> findProducts(String name, String category, String brand, Pageable pageable) {
 		return productRepository.findProducts(name, category, brand, pageable);
+	}
+
+	@Override
+	public Product updateProduct(long productId, Product product) {
+		if (productId == 0 || product == null || productId != product.getId()) {
+			throw new ConflictException("Incomplete data for editing");
+		}
+		
+		product.setEditDate(new Date());
+		
+		 int i= productRepository.updateProduct(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getEditDate());
+		System.out.println(i);
+		 
+		 return product;
 	}
 }

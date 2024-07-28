@@ -7,5 +7,6 @@ import com.vladyslavnicko.gmail.model.Brand;
 public interface BrandRepository extends JpaRepository<Brand, Long> {
 
 	Brand save(Brand brand);
+	Brand findByName(String name);
 
 }

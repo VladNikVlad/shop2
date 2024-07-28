@@ -6,4 +6,6 @@ public interface BrandService {
 
 	Brand saveNewBrand(Brand brand);
 
+	Brand findBrandByName(String name);
+
 }

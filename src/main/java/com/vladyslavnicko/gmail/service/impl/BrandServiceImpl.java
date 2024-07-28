@@ -26,14 +26,24 @@ public class BrandServiceImpl implements BrandService{
 			throw new ConflictException("Brand is null");
 		}
 		
-		if (StringUtils.isBlank(brand.getName())) {
-			throw new ConflictException("Name is empty");
+		Brand oldBrand = findBrandByName(brand.getName());
+		if (oldBrand != null) {
+			throw new ConflictException("This brand already exists!");
 		}
 		
 		brand.setCreatorUser(userService.getCurrentUser());
 		brand.setCreateDate(new Date());
 		
 		return brandRepository.save(brand);
+	}
+
+	@Override
+	public Brand findBrandByName(String name) {
+		if (StringUtils.isBlank(name)) {
+			throw new ConflictException("Name is empty");
+		}
+		
+		return brandRepository.findByName(name);
 	}
 
 }

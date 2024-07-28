@@ -17,7 +17,7 @@ public class Comment {
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @Column(name = "comment")

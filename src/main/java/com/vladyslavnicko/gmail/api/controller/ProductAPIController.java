@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,8 +24,7 @@ public class ProductAPIController {
 
 	private final APIService apiService;
 	
-	@GetMapping
-	@RequestMapping("/{productId}")
+	@GetMapping("/{productId}")
 	public ResponseEntity<ProductAPI> findProductById(@PathVariable long productId){
 		return ResponseEntity.ok(apiService.findProductBy(productId));
 	}
@@ -42,7 +42,15 @@ public class ProductAPIController {
 	
 	@PostMapping
 	public ResponseEntity<ProductAPI> creatNewProduct(@RequestBody ProductAPI product){
-		return ResponseEntity.ok(apiService.saveProduct(product));
+		product = apiService.saveProduct(product);
+		return ResponseEntity.ok(product);
+	}
+	
+	
+	@PutMapping("/{productId}")
+	public ResponseEntity<ProductAPI> updateProduct(@PathVariable long productId,
+			@RequestBody ProductAPI product){
+		return ResponseEntity.ok(apiService.updateProduct(productId, product));
 	}
 	
 	

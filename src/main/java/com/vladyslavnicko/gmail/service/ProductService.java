@@ -21,4 +21,5 @@ public interface ProductService {
     int countProducts();
 	Product findProductBy(long productId);
 	Page<Product> findProducts(String name, String category, String brand, Pageable pageable);
+	Product updateProduct(long productId, Product product);
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -19,4 +20,10 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
+    
+    @Column(name = "create_date", nullable = false)
+    private Date createDate;
+    
+    @Column(name = "delete_date")
+    private Date deeleteDate;
 }

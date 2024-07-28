@@ -1,8 +1,5 @@
 package com.vladyslavnicko.gmail.model;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,13 +8,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 
 @Entity
 @Table(name = "images")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Image {
 
 	@Id
@@ -32,6 +35,6 @@ public class Image {
 	private byte[] data;
 	
 	@ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = true)
     private Product product;
 }
