@@ -5,22 +5,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.http.SessionCreationPolicy;
-//import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-//import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import com.vladyslavnicko.gmail.model.Role;
 
-//import com.vladyslavnicko.gmail.service.impl.UserDetailsServiceImpl;
-//
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.GET;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -29,7 +26,6 @@ public class SecurityConfig {
 	private static final String[] WHITE_LIST_URL = {
 			"/api/v1/login",
 			"/api/v1/dictionary",
-		//	"/api/v1/product",
 			"/api/v1/auth/**",
 			"/zip", 
 			"/registration", 
@@ -38,8 +34,6 @@ public class SecurityConfig {
 			"/js/**"
     		};
 
-	//    private final AuthenticationSuccessHandler authenticationSuccessHandler;
-//	private UserDetailsService userDetailsService;
 	private final AuthenticationProvider authenticationProvider;
 	private final LogoutHandler logoutHandler;
 	private final JwtAuthenticationFilter jwtAuthFilter;
@@ -52,20 +46,6 @@ public class SecurityConfig {
 		this.logoutHandler = logoutHandler;
 		this.jwtAuthFilter = jwtAuthFilter;
 	}
-//
-//	@Bean
-//	public AuthenticationManager authenticationManager(
-//			UserDetailsServiceImpl userDetailsService,
-//			PasswordHashingImpl passwordEncoder) {
-//		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//		authenticationProvider.setUserDetailsService(userDetailsService);
-//		authenticationProvider.setPasswordEncoder(passwordEncoder);
-//		
-//		ProviderManager providerManager = new ProviderManager(authenticationProvider);
-//		providerManager.setEraseCredentialsAfterAuthentication(false);
-//
-//		return providerManager;
-//	}
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -74,6 +54,7 @@ public class SecurityConfig {
 		.authorizeHttpRequests(req ->
 		req.requestMatchers(WHITE_LIST_URL)
 		.permitAll()
+		.requestMatchers(GET, "/api/v1/product/**").hasAnyAuthority(Role.USER.name())
 		.anyRequest()
 		.authenticated()
 				)

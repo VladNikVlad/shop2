@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vladyslavnicko.gmail.api.model.UserAPI;
+import com.vladyslavnicko.gmail.api.model.UserRegistration;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,14 +24,14 @@ public class AuthenticationAPIController {
 
 	@PostMapping("/register")
 	public ResponseEntity<AuthenticationResponse> register(
-			@RequestBody UserAPI request
+			@RequestBody UserRegistration request
 			) {
 		return ResponseEntity.ok(service.register(request));
 	}
 	
 	@PostMapping("/authenticate")
 	public ResponseEntity<AuthenticationResponse> authenticate(
-			@RequestBody UserAPI request
+			@RequestBody UserRegistration request
 			) {
 		return ResponseEntity.ok(service.authenticate(request));
 	}

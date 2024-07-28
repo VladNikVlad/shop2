@@ -1,7 +1,5 @@
 package com.vladyslavnicko.gmail.exception;
 
-import com.vladyslavnicko.gmail.service.UserService;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

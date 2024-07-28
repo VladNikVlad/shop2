@@ -6,18 +6,18 @@ import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vladyslavnicko.gmail.DTO.MyUserDetails;
-import com.vladyslavnicko.gmail.api.model.UserAPI;
+import com.vladyslavnicko.gmail.api.model.UserRegistration;
 import com.vladyslavnicko.gmail.api.service.APIService;
 import com.vladyslavnicko.gmail.config.JwtService;
 import com.vladyslavnicko.gmail.config.token.Token;
 import com.vladyslavnicko.gmail.config.token.TokenRepository;
 import com.vladyslavnicko.gmail.config.token.TokenType;
+import com.vladyslavnicko.gmail.model.Role;
 import com.vladyslavnicko.gmail.model.User;
 import com.vladyslavnicko.gmail.repository.UserRepository;
 
@@ -36,13 +36,13 @@ public class AuthenticationService {
 	private final AuthenticationManager authenticationManager;
 	private final APIService apiSevice;
 	
-	public AuthenticationResponse register(UserAPI request) {
+	public AuthenticationResponse register(UserRegistration request) {
 		User user = User.builder()
 				.firstName(request.getFirstName())
 				.lastName(request.getLastName())
 				.email(request.getEmail())
 				.password(passwordEncoder.encode(request.getPassword()))
-				.role(request.getRole())
+				.role(Role.USER)
 				.build();
 		User savedUser = apiSevice.saveNewUser(user);
 		String jwtToken = jwtService.generateToken(new MyUserDetails(user));
@@ -54,7 +54,7 @@ public class AuthenticationService {
 				.build();
 	}
 
-	public AuthenticationResponse authenticate(UserAPI request) {
+	public AuthenticationResponse authenticate(UserRegistration request) {
 	    authenticationManager.authenticate(
 	        new UsernamePasswordAuthenticationToken(
 	            request.getEmail(),
