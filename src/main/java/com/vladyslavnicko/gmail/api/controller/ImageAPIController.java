@@ -38,4 +38,8 @@ public class ImageAPIController {
 		List<ImageAPI> images = apiService.findImageByIds(ids);
         return ResponseEntity.status(HttpStatus.OK).body(images);
     }
+
+private void test(){
+}
+
 }
