@@ -46,4 +46,6 @@ public class ImageAPIController {
         //productService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+	public void test(){}
 }
